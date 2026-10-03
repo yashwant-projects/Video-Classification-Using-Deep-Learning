@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+env/
+.env/
+
+# Datasets and extracted features (DO NOT PUSH THESE - VERY LARGE)
+Dataset/
+Dataset_Features/
+Dataset_Frames/
+
+# Model Weights and Training Runs
+models/
+weights/
+runs/
+*.pt
+*.caffemodel
+*.onnx
+*.xml
+*.prototxt
+
+# Databases
+*.db
+surveillance.db
+
+# User Uploads/Outputs
+uploads/
+SIH_Civilian_Safety_Dossier.pdf
+confusion_matrix.png
+*.mp4
+*.avi
+
+# OS Generated
+.DS_Store
+Thumbs.db

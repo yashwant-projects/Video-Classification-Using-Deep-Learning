@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Border Video Analytics Platform</title>
+    <style>
+        :root {
+            --bg-base: #0b0f19;
+            --card-bg: #111827;
+            --border-color: #1f2937;
+            --primary-blue: #2563eb;
+            --primary-blue-hover: #1d4ed8;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --accent-border: #3b82f6;
+            --alert-red: #ef4444;
+            --alert-yellow: #f59e0b;
+            --alert-green: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        header {
+            max-width: 1400px;
+            margin: 0 auto 28px auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: #ffffff;
+        }
+
+        .system-tag {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            background: #1e293b;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid #334155;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            position: relative;
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        /* Upload Panel Form Elements */
+        .upload-group {
+            display: flex;
+            align-items: center;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 6px;
+            margin-bottom: 16px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .custom-file-btn {
+            background: #ffffff;
+            color: #0f172a;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .filename-display {
+            margin-left: 12px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 280px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-blue-hover);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Intelligence Report Panel */
+        .report-card {
+            border: 2px solid var(--accent-border);
+            margin-top: 24px;
+        }
+
+        .report-section {
+            margin-bottom: 20px;
+        }
+
+        .report-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .report-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .directive-badge {
+            display: inline-block;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 6px;
+            color: #ffffff;
+            background-color: #334155;
+            letter-spacing: 0.02em;
+        }
+
+        .directive-badge.red {
+            background-color: var(--alert-red);
+            color: #ffffff;
+        }
+
+        .directive-badge.yellow {
+            background-color: var(--alert-yellow);
+            color: #000000;
+        }
+
+        .directive-badge.green {
+            background-color: var(--alert-green);
+            color: #ffffff;
+        }
+
+        .classification-output {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .classification-confidence {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-left: 6px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #1f2937;
+            margin: 16px 0;
+        }
+
+        /* Live Stream Section */
+        .stream-container {
+            width: 100%;
+            background: #000000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #1f2937;
+            position: relative;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stream-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .stream-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--alert-green);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--alert-green);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Intelligent Border Video Analytics Platform</h1>
+        <span class="system-tag">Surveillance Operational</span>
+    </header>
+
+    <div class="dashboard-grid">
+        <!-- MODE 1: FORENSIC VIDEO UPLOAD -->
+        <div>
+            <div class="card">
+                <div class="card-title">Mode 1: Forensic Video Upload</div>
+                <form id="uploadForm">
+                    <div class="upload-group">
+                        <div class="file-input-wrapper">
+                            <span class="custom-file-btn">Choose File</span>
+                            <input type="file" id="videoFile" name="file" accept="video/*" required>
+                        </div>
+                        <span class="filename-display" id="fileNameDisplay">No file selected</span>
+                    </div>
+                    <button type="submit" class="btn-submit" id="submitBtn">Run Forensic Analysis</button>
+                </form>
+
+                <!-- REPORT SECTION (Cleaned of legacy weapon entries) -->
+                <div class="card report-card" id="reportCard">
+                    <div class="card-title">Intelligence Report</div>
+
+                    <div class="report-section">
+                        <div class="report-label">SYSTEM DIRECTIVE</div>
+                        <div class="directive-badge" id="systemDirective">Standby</div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="report-section">
+                        <div class="report-label">LSTM ACTION CLASSIFICATION</div>
+                        <div class="classification-output">
+                            <span id="predictedClass">Awaiting Analysis</span>
+                            <span class="classification-confidence" id="confidenceValue"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODE 2: LIVE SURVEILLANCE FEED -->
+        <div>
+            <div class="card">
+                <div class="card-title">Mode 2: Live Surveillance Feed</div>
+                <div class="stream-container">
+                    <img src="/video_feed" alt="Live Surveillance Feed Offline">
+                </div>
+                <div class="stream-status">
+                    <span class="status-dot" id="cameraStatusDot" style="background: var(--alert-red); box-shadow: 0 0 8px var(--alert-red);"></span>
+                    <span id="cameraStatusText">Camera Offline | SQLite Telemetry Ready</span>
+                </div>
+                <button type="button" class="btn-submit" id="toggleCameraBtn" style="margin-top: 16px; background-color: var(--alert-green);">Initialize Camera Feed</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('videoFile');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const uploadForm = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const systemDirective = document.getElementById('systemDirective');
+        const predictedClass = document.getElementById('predictedClass');
+        const confidenceValue = document.getElementById('confidenceValue');
+
+        // File selection label handling
+        fileInput.addEventListener('change', function () {
+            if (this.files && this.files.length > 0) {
+                fileNameDisplay.textContent = this.files[0].name;
+            } else {
+                fileNameDisplay.textContent = 'No file selected';
+            }
+        });
+
+        // Form submission & AJAX processing
+        uploadForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select a video file.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing Video Frames...';
+            systemDirective.className = 'directive-badge';
+            systemDirective.textContent = 'Analyzing...';
+            predictedClass.textContent = 'Extracting CLIP & Bi-LSTM Features...';
+            confidenceValue.textContent = '';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    systemDirective.textContent = 'Error';
+                    predictedClass.textContent = data.error;
+                    confidenceValue.textContent = '';
+                } else {
+                    // Update System Directive Badge
+                    systemDirective.textContent = data.system_status || 'Safe';
+                    systemDirective.className = 'directive-badge ' + (data.alert_color || '');
+
+                    // Update LSTM Action Prediction
+                    predictedClass.textContent = data.action_prediction || 'Unknown';
+                    confidenceValue.textContent = data.action_confidence ? `(${data.action_confidence})` : '';
+                }
+            } catch (err) {
+                systemDirective.textContent = 'Connection Error';
+                predictedClass.textContent = 'Failed to process forensic request.';
+                confidenceValue.textContent = '';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Run Forensic Analysis';
+            }
+        });
+
+        // --- Camera Toggle Logic ---
+        const toggleCameraBtn = document.getElementById('toggleCameraBtn');
+        const cameraStatusDot = document.getElementById('cameraStatusDot');
+        const cameraStatusText = document.getElementById('cameraStatusText');
+
+        toggleCameraBtn.addEventListener('click', async function() {
+            try {
+                const response = await fetch('/toggle_camera', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.camera_active) {
+                    toggleCameraBtn.textContent = 'Terminate Camera Feed';
+                    toggleCameraBtn.style.backgroundColor = 'var(--alert-red)';
+                    cameraStatusDot.style.background = 'var(--alert-green)';
+                    cameraStatusDot.style.boxShadow = '0 0 8px var(--alert-green)';
+                    cameraStatusText.textContent = 'Virtual Fence Active | SQLite Telemetry Running';
+                } else {
+                    toggleCameraBtn.textContent = 'Initialize Camera Feed';
+                    toggleCameraBtn.style.backgroundColor = 'var(--alert-green)';
+                    cameraStatusDot.style.background = 'var(--alert-red)';
+                    cameraStatusDot.style.boxShadow = '0 0 8px var(--alert-red)';
+                    cameraStatusText.textContent = 'Camera Offline | SQLite Telemetry Ready';
+                }
+            } catch (err) {
+                console.error("Failed to toggle camera:", err);
+                alert("Failed to communicate with the server.");
+            }
+        });
+    </script>
+</body>
+</html>

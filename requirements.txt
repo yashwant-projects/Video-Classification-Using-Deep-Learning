@@ -1,0 +1,15 @@
+Flask
+werkzeug
+opencv-python
+numpy
+torch
+torchvision
+Pillow
+transformers
+ultralytics
+matplotlib
+fpdf
+easyocr
+facenet-pytorch
+openpyxl
+requests
