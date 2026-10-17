@@ -30,7 +30,7 @@ This project implements a Deep Learning-based video classification and surveilla
 ## Dataset Details
 The model is trained on a meticulously curated dataset containing exactly **1050 unique videos** across 7 classes (150 videos per class):
 
-- **Traffic (150 Videos)**: Traffic 150 videos collected by running youtube video scaraper code (`scrape_traffic.py`).
+- **Traffic (150 Videos)**: Sourced across diverse perspectives (dashcam, aerial drone, and urban street traffic) using the included YouTube video scraper script (`scrape_traffic.py`) to eliminate environmental background and CCTV domain-shift bias.
 - **Wildlife (150 Videos)**: Extracted from the massive 30K+ [Animal-Kingdom Dataset](https://github.com/sutdcv/Animal-Kingdom). Sourced automatically using the included `wildlife_extractor.py` script.
 - **Violence (150 Videos)**: Curated from the [Real Life Violence Situations Dataset](https://www.kaggle.com/datasets/mohamedmustafa/real-life-violence-situations-dataset) with aspect-ratio letterbox padding.
 - **Education, Entertainment, Human Activities, and Sports (600 Videos total, 150 each)**: Selected from the [UCF101 Dataset](https://www.kaggle.com/datasets/pevogam/ucf101) by running the `dataset_extractor.py` script to collect these remaining 4 classes.
@@ -39,8 +39,8 @@ The model is trained on a meticulously curated dataset containing exactly **1050
 
 1. **Clone the repository**:
    ```bash
-   git clone <your-github-repo-url>
-   cd <your-repo-name>
+   git clone https://github.com/yashwant-projects/Video-Classification-Using-Deep-Learning.git
+   cd Video-Classification-Using-Deep-Learning
    ```
 
 2. **Install the required packages**:
