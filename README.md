@@ -49,16 +49,11 @@ The model is trained on a meticulously curated dataset containing exactly **1050
    pip install -r requirements.txt
    ```
 
-3. **Download Standard Pre-trained Weights**:
-   You do not need to hunt for the standard model weights manually! Simply run the included script to safely download all necessary weights (YOLOv8, Torchvision, EasyOCR, MTCNN) directly into your project:
-   ```bash
-   python force_download.py
-   ```
-
-4. **Download Custom LSTM Weights**:
-   Due to GitHub file size limits, the custom trained model weights are hosted via GitHub Releases. 
+3. **Download Custom Bi-LSTM Model Weights**:
+   Due to GitHub file size limits, the custom trained model checkpoint (98.10% accuracy) is hosted via GitHub Releases. 
    - Download the model here: [sih_lstm_model.pth](https://github.com/yashwant-projects/Video-Classification-Using-Deep-Learning/releases/download/v1.0/sih_lstm_model.pth)
-   - Place the downloaded file inside the `models/` directory in this project.
+   - Place the downloaded `sih_lstm_model.pth` inside the `models/` directory in this project.
+   *(Standard pre-trained YOLOv8 weights and OpenAI CLIP ViT-B/32 will automatically download on-demand on first run).*
 
 ## Running the Application
 

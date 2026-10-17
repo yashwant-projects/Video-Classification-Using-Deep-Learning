@@ -8,8 +8,8 @@ Pillow
 transformers
 ultralytics
 matplotlib
+seaborn
+scikit-learn
 fpdf
-easyocr
-facenet-pytorch
 openpyxl
 requests
