@@ -458,7 +458,7 @@ def make_data_design():
 # 5. HARDWARE & SOFTWARE DESIGN (Checklist Point 9 - Slide 12)
 # -----------------------------------------------------------------------------
 def make_hardware_software_stack():
-    fig, (ax_hw, ax_sw) = plt.subplots(1, 2, figsize=(16, 8.2), dpi=300, gridspec_kw={'width_ratios': [1, 1]})
+    fig, (ax_hw, ax_sw) = plt.subplots(1, 2, figsize=(16, 8.2), dpi=300, gridspec_kw={'width_ratios': [1.12, 0.88]})
 
     ax_hw.axis("off")
     ax_hw.set_xlim(0, 10)
@@ -474,10 +474,10 @@ def make_hardware_software_stack():
         ["Network Interface", "Broadband / Wi-Fi 6", "HTTPS Webhook Protocol", "Telegram Bot Push Alerts (<1.2s)"]
     ]
 
-    t_hw = ax_hw.table(cellText=hw_specs, cellLoc="center", loc="center", colWidths=[0.24, 0.28, 0.28, 0.20])
+    t_hw = ax_hw.table(cellText=hw_specs, cellLoc="center", loc="center", colWidths=[0.19, 0.24, 0.24, 0.33])
     t_hw.auto_set_font_size(False)
-    t_hw.set_fontsize(8.5)
-    t_hw.scale(1, 1.55)
+    t_hw.set_fontsize(7.8)
+    t_hw.scale(1, 1.6)
 
     for (r, c), cell in t_hw.get_celld().items():
         cell.set_edgecolor("#bdc3c7")
