@@ -68,8 +68,13 @@ lstm_model = SIHActionBiLSTM().to(device)
 lstm_model.load_state_dict(torch.load("models/sih_lstm_model.pth", map_location=device, weights_only=True))
 lstm_model.eval()
 
-clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", use_safetensors=True, local_files_only=True).to(device)
-clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", local_files_only=True)
+try:
+    clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", use_safetensors=True, local_files_only=True).to(device)
+    clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", local_files_only=True)
+except Exception:
+    print("[*] Local CLIP cache not found. Downloading openai/clip-vit-base-patch32...")
+    clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", use_safetensors=True).to(device)
+    clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
 # Downloads standard YOLOv8s. COCO Class 43 is 'Knife'.
 yolo_model = YOLO("yolov8s.pt")
