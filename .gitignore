@@ -34,6 +34,16 @@ IBVAP_Presentation_v6.pptx
 *.mp4
 *.avi
 
+# Archive Files (Gigabytes in size)
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Temporary Files
+~$*
+*.tmp
+
 # OS Generated
 .DS_Store
 Thumbs.db

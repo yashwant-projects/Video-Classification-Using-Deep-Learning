@@ -32,26 +32,52 @@ class VideoFeatureDataset(Dataset):
         npy_path, label = self.data[idx]
         return torch.tensor(np.load(npy_path), dtype=torch.float32), torch.tensor(label, dtype=torch.long)
 
-# --- UPDATED MODEL ARCHITECTURE (Mean-Max Pooling) ---
+class TemporalAttention(nn.Module):
+    def __init__(self, hidden_dim):
+        super().__init__()
+        self.attention = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim // 2),
+            nn.Tanh(),
+            nn.Linear(hidden_dim // 2, 1)
+        )
+    def forward(self, lstm_out):
+        attn_weights = self.attention(lstm_out)
+        attn_weights = torch.softmax(attn_weights, dim=1)
+        context = torch.sum(attn_weights * lstm_out, dim=1)
+        return context
+
 class SIHActionBiLSTM(nn.Module):
     def __init__(self, input_dim=512, hidden_dim=256, num_classes=len(CLASSES)):
         super().__init__()
         self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers=2, 
-                            batch_first=True, bidirectional=True, dropout=0.4)
+                            batch_first=True, bidirectional=True, dropout=0.5)
         
-        self.fc1 = nn.Linear(hidden_dim * 2 * 2, 128)
-        self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(0.5) 
+        self.attention = TemporalAttention(hidden_dim * 2)
+        
+        self.ln1 = nn.LayerNorm(hidden_dim * 2 * 3)
+        self.fc1 = nn.Linear(hidden_dim * 2 * 3, 128)
+        self.ln2 = nn.LayerNorm(128)
+        self.act = nn.GELU()
+        self.dropout = nn.Dropout(0.5)
         self.fc2 = nn.Linear(128, num_classes)
         
     def forward(self, x):
+        if self.training:
+            noise = torch.randn_like(x) * 0.05
+            x = x + noise
+            mask = (torch.rand(x.size(0), x.size(1), 1, device=x.device) > 0.15).float()
+            x = x * mask
+            
         lstm_out, _ = self.lstm(x) 
         
+        attn_pool = self.attention(lstm_out)
         mean_pool = torch.mean(lstm_out, dim=1)
         max_pool = torch.max(lstm_out, dim=1)[0]
-        temporal_features = torch.cat((mean_pool, max_pool), dim=1) 
         
-        x = self.relu(self.fc1(temporal_features))
+        temporal_features = torch.cat((attn_pool, mean_pool, max_pool), dim=1) 
+        
+        x = self.ln1(temporal_features)
+        x = self.act(self.ln2(self.fc1(x)))
         x = self.dropout(x)
         return self.fc2(x)
 

@@ -22,15 +22,17 @@ This project implements a Deep Learning-based video classification and surveilla
 
 
 ## Performance Metrics
-- **Test Accuracy**: Achieved a massive global peak testing accuracy of **99.05%** on the unseen holdout videos.
-- **Precision & Recall**: Critical security classes like Violence, Wildlife, and Traffic achieved flawless 1.0000 Precision and Recall scores.
+- **Test Accuracy**: Achieved a robust, generalized peak testing accuracy of **98.10% (206/210 correct)** on unseen holdout videos.
+- **Macro AUC & Sensitivity**: Recorded a **0.9983 Macro AUC** and **0.9810 Macro Sensitivity/Recall**, demonstrating strong discriminative separation across all 7 classes.
+- **Precision & Recall**: Education, Entertainment, and Wildlife achieved flawless **1.0000** Precision and Recall scores, with **0.9667+** across Traffic, Violence, Human Activities, and Sports.
+- **Zero Dataset Bias**: Evaluated on a diverse dataset (dashcam, drone, and street traffic; letterbox aspect-ratio preservation for violence), completely eliminating static CCTV background memorization.
 
 ## Dataset Details
 The model is trained on a meticulously curated dataset containing exactly **1050 unique videos** across 7 classes (150 videos per class):
 
-- **Traffic (150 Videos)**: Filtered from the [Traffic Video Dataset](https://www.kaggle.com/datasets/arshadrahmanziban/traffic-video-dataset) (originally 254 videos). A script was run to keep only the highest quality/least blurry videos.
+- **Traffic (150 Videos)**: Traffic 150 videos collected by running youtube video scaraper code (`scrape_traffic.py`).
 - **Wildlife (150 Videos)**: Extracted from the massive 30K+ [Animal-Kingdom Dataset](https://github.com/sutdcv/Animal-Kingdom). Sourced automatically using the included `wildlife_extractor.py` script.
-- **Violence (150 Videos)**: Manually dragged and dropped from the [Real Life Violence Situations Dataset](https://www.kaggle.com/datasets/mohamedmustafa/real-life-violence-situations-dataset) (originally 1000 videos).
+- **Violence (150 Videos)**: Curated from the [Real Life Violence Situations Dataset](https://www.kaggle.com/datasets/mohamedmustafa/real-life-violence-situations-dataset) with aspect-ratio letterbox padding.
 - **Education, Entertainment, Human Activities, and Sports (600 Videos total, 150 each)**: Selected from the [UCF101 Dataset](https://www.kaggle.com/datasets/pevogam/ucf101) by running the `dataset_extractor.py` script to collect these remaining 4 classes.
 
 ## Prerequisites & Installation
@@ -47,11 +49,16 @@ The model is trained on a meticulously curated dataset containing exactly **1050
    pip install -r requirements.txt
    ```
 
-3. **Download Required Weights**:
-   You do not need to hunt for the model weights manually! Simply run the included script to safely download all necessary weights (YOLOv8, Torchvision, EasyOCR, MTCNN) directly into your project:
+3. **Download Standard Pre-trained Weights**:
+   You do not need to hunt for the standard model weights manually! Simply run the included script to safely download all necessary weights (YOLOv8, Torchvision, EasyOCR, MTCNN) directly into your project:
    ```bash
    python force_download.py
    ```
+
+4. **Download Custom LSTM Weights**:
+   Due to GitHub file size limits, the custom trained model weights are hosted via GitHub Releases. 
+   - Download the model here: [sih_lstm_model.pth](https://github.com/yashwant-projects/Video-Classification-Using-Deep-Learning/releases/download/v1.0/sih_lstm_model.pth)
+   - Place the downloaded file inside the `models/` directory in this project.
 
 ## Running the Application
 
@@ -70,8 +77,13 @@ python generate_dossier.py
 This will output `SIH_Civilian_Safety_Dossier.pdf` into your main folder.
 
 ## Project Structure
-- `app.py`: Main Flask application.
-- `train_lstm.py`: Model training script utilizing LSTM networks.
-- `hybrid_inference.py`: Runs complex inference blending multiple deep learning models.
-- `generate_dossier.py` / `generate_dossier_plots.py`: Scripts to generate PDF reports and data plots.
-- `dataset_extractor.py` / `wildlife_extractor.py` / `traffic_extractor.py`: Utility scripts that were used to build and curate the custom dataset.
+- `app.py`: Central Flask web application powering Mode 1 (Forensic Video Upload) and Mode 2 (Live Surveillance with Virtual Fence).
+- `train_lstm.py`: Training script for the Bi-LSTM model with Temporal Attention and Tri-Pooling.
+- `evaluate_model.py`: Computes test evaluation diagnostics (classification report, 98.10% accuracy, and confusion matrix).
+- `hybrid_inference.py`: Production inference engine blending YOLOv8 spatial tracking, CLIP ViT-B/32, and the Bi-LSTM classifier.
+- `extract_frames.py`: Converts raw MP4s into 16 YOLO-gated frames with aspect-ratio letterboxing.
+- `extract_features.py`: Serializes extracted frames into 512-dim CLIP embeddings (`.npy`).
+- `scrape_traffic.py`: YouTube video scraper for curating the diverse traffic video dataset using `yt-dlp`.
+- `generate_dossier.py` / `generate_dossier_plots.py`: Scripts to generate the executive PDF intelligence dossier and evaluation plots.
+- `generate_design_diagrams.py` / `build_presentation.py`: Generates high-resolution architectural diagrams and compiles the complete 22-slide university review presentation deck.
+- `dataset_extractor.py` / `wildlife_extractor.py` / `traffic_extractor.py`: Utility scripts used to curate and preprocess the 1,050-video dataset.

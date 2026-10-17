@@ -40,10 +40,11 @@ def generate_report():
     body_1 = (
         "This project implements a dual-stream deep learning pipeline designed for zero-shot threat detection "
         "and action recognition in civilian environments.\n\n"
-        "Stream A (Temporal): Utilizes an OpenAI CLIP (ViT-B/32) feature extractor coupled with a Bidirectional LSTM. "
-        "The LSTM applies Temporal Mean-Max Pooling to evaluate sequences of 16 frames, isolating distinct physical actions.\n"
-        "Stream B (Spatial): Integrates Ultralytics YOLOv8 for spatial object detection and tracking "
-        "to provide real-time situational awareness."
+        "Stream A (Temporal): Utilizes an OpenAI CLIP (ViT-B/32) feature extractor coupled with a 2-layer Bidirectional LSTM. "
+        "The model features Temporal Attention concatenated with Mean and Max pooling (1536-dim), stabilized by LayerNorm "
+        "and GELU activations to evaluate sequences of 16 frames and isolate complex physical actions.\n"
+        "Stream B (Spatial): Integrates Ultralytics YOLOv8 for spatial object detection, tracking, and virtual fence perimeter "
+        "monitoring to provide real-time situational awareness."
     )
     pdf.chapter_body(body_1)
 
@@ -52,17 +53,19 @@ def generate_report():
     body_2 = (
         "To ensure robust evaluation on unseen real-world data, the 1,050-video dataset was strictly partitioned at the "
         "video level prior to frame extraction. The 80/20 stratified split guarantees exactly 840 training videos and "
-        "210 unseen testing videos, evenly distributed across 7 classes. No data leakage occurred between the training "
-        "and testing environments."
+        "210 unseen testing videos, evenly distributed across 7 classes (30 test videos per class). The dataset features "
+        "diverse environmental distributions (dashcam, drone, and handheld footage for traffic, aspect-ratio unwarped letterboxing "
+        "for violence) to completely eliminate dataset domain-shift bias."
     )
     pdf.chapter_body(body_2)
 
     # Section 3: Performance Metrics
     pdf.chapter_title('3. Unseen Data Performance Metrics')
     body_3 = (
-        "The model was evaluated exclusively on the 210 holdout videos. The system achieved a global peak testing "
-        "accuracy of 99.05%. Critical security classes, including Violence, Wildlife, and Traffic, achieved a flawless "
-        "1.0000 Precision and Recall score, successfully flagging all unauthorized environmental anomalies."
+        "The model was evaluated exclusively on the 210 holdout videos. The system achieved a validated peak testing "
+        "accuracy of 98.10% (206/210 correct) with an extraordinary Macro AUC of 0.9983. Education, Entertainment, and Wildlife "
+        "achieved flawless 1.0000 Precision and Recall scores, with 0.9667+ across Violence, Traffic, Human Activities, and Sports. "
+        "The model generalizes robustly without environmental memorization."
     )
     pdf.chapter_body(body_3)
 

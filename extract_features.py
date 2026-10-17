@@ -42,6 +42,9 @@ def process_phase_two():
             
             for idx, vid_folder in enumerate(videos, 1):
                 vid_path = os.path.join(cls_path, vid_folder)
+                out_file = os.path.join(out_cls_dir, f"{vid_folder}.npy")
+                if os.path.exists(out_file):
+                    continue
                 
                 # Verify exactly 16 frames exist
                 frame_files = sorted(glob.glob(os.path.join(vid_path, "*.jpg")))
