@@ -27,13 +27,22 @@ This project implements a Deep Learning-based video classification and surveilla
 - **Precision & Recall**: Education, Entertainment, and Wildlife achieved flawless **1.0000** Precision and Recall scores, with **0.9667+** across Traffic, Violence, Human Activities, and Sports.
 - **Zero Dataset Bias**: Evaluated on a diverse dataset (dashcam, drone, and street traffic; letterbox aspect-ratio preservation for violence), completely eliminating static CCTV background memorization.
 
-## Dataset Details
-The model is trained on a meticulously curated dataset containing exactly **1050 unique videos** across 7 classes (150 videos per class):
+## Dataset Details & Hugging Face Hub
+The complete dataset, extracted frames, and serialized CLIP feature embeddings are hosted on Hugging Face:
+- 🌐 **Hugging Face Dataset Repository**: [yashwant7/Video-Classification-System-Using-Deep-Learning](https://huggingface.co/datasets/yashwant7/Video-Classification-System-Using-Deep-Learning/tree/main)
+
+The model is trained on a meticulously curated dataset containing exactly **1,050 unique videos** across 7 classes (150 videos per class):
 
 - **Traffic (150 Videos)**: Sourced across diverse perspectives (dashcam, aerial drone, and urban street traffic) using the included YouTube video scraper script (`scrape_traffic.py`) to eliminate environmental background and CCTV domain-shift bias.
 - **Wildlife (150 Videos)**: Extracted from the massive 30K+ [Animal-Kingdom Dataset](https://github.com/sutdcv/Animal-Kingdom). Sourced automatically using the included `wildlife_extractor.py` script.
 - **Violence (150 Videos)**: Curated from the [Real Life Violence Situations Dataset](https://www.kaggle.com/datasets/mohamedmustafa/real-life-violence-situations-dataset) with aspect-ratio letterbox padding.
 - **Education, Entertainment, Human Activities, and Sports (600 Videos total, 150 each)**: Selected from the [UCF101 Dataset](https://www.kaggle.com/datasets/pevogam/ucf101) by running the `dataset_extractor.py` script to collect these remaining 4 classes.
+
+### Hosted Dataset Artifacts
+For immediate reproducibility and accelerated training without raw video decoding, pre-packaged archives are available for download directly from the [Hugging Face repository](https://huggingface.co/datasets/yashwant7/Video-Classification-System-Using-Deep-Learning/tree/main):
+- **`Dataset.zip`** (~1.13 GB): Complete raw video collection (1,050 MP4s across all 7 categories).
+- **`Dataset_Frames.zip`** (~226 MB): Exactly 16,800 YOLO-gated, letterbox-padded frames (16 frames per video).
+- **`Dataset_Features.zip`** (~30.8 MB): Pre-computed 512-dimensional CLIP ViT-B/32 `.npy` embeddings for instantaneous model training and evaluation.
 
 ## Prerequisites & Installation
 
@@ -49,10 +58,10 @@ The model is trained on a meticulously curated dataset containing exactly **1050
    pip install -r requirements.txt
    ```
 
-3. **Download Custom Bi-LSTM Model Weights**:
-   Due to GitHub file size limits, the custom trained model checkpoint (98.10% accuracy) is hosted via GitHub Releases. 
-   - Download the model here: [sih_lstm_model.pth](https://github.com/yashwant-projects/Video-Classification-Using-Deep-Learning/releases/download/v1.0/sih_lstm_model.pth)
-   - Place the downloaded `sih_lstm_model.pth` inside the `models/` directory in this project.
+3. **Download Model Weights (GitHub Releases)**:
+   Due to GitHub file size limits, the trained Bi-LSTM model weights (`sih_lstm_model.pth`, 98.10% accuracy) are hosted directly in the repository's **GitHub Releases**:
+   - Download the model here: [sih_lstm_model.pth](https://github.com/yashwant-projects/Video-Classification-Using-Deep-Learning/releases/download/v1.0/sih_lstm_model.pth) (or via the [Releases](https://github.com/yashwant-projects/Video-Classification-Using-Deep-Learning/releases) section).
+   - Place the downloaded `sih_lstm_model.pth` file inside the `models/` directory in this project.
    *(Standard pre-trained YOLOv8 weights and OpenAI CLIP ViT-B/32 will automatically download on-demand on first run).*
 
 ## Running the Application
